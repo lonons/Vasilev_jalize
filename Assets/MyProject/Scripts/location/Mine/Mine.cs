@@ -4,13 +4,20 @@ using UnityEngine;
 
 public class Mine : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] int damage = 6;
+    [SerializeField] float force = 6;
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Enemy")
+        if (collision.collider.gameObject.TryGetComponent(out Health health))
         {
-            Destroy(collision.gameObject);
+            health.Hit(damage);
+            Rigidbody rb = collision.gameObject.GetComponent<Rigidbody>();
+            Vector3 dir = collision.gameObject.transform.TransformDirection(Vector3.back * force);
+            rb.AddForce(dir,ForceMode.Impulse);
+
+            Destroy(gameObject);
         }
+       
     }
 }
