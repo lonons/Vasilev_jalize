@@ -21,6 +21,7 @@ public class FPS_controller : MonoBehaviour
     private string jump = "Jump";
 
     private bool isRunning;
+    private bool isGround;
 
     public float mouseSensitivityX = 1.0f;
     public float mouseSensitivityY = 1.0f;
@@ -34,6 +35,15 @@ public class FPS_controller : MonoBehaviour
     {
         UnityEngine.Cursor.visible = false;
         cameraT = Camera.main.transform;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "ground") isGround = true;
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "ground") isGround = false;
     }
 
     void Update()
@@ -50,7 +60,7 @@ public class FPS_controller : MonoBehaviour
         Vector3  dir = rb.transform.TransformDirection(_direction * (isRunning ? runSpeed : _speed));
         Vector3 dirJump = rb.transform.TransformDirection(_directionJump * jumpSpeed);
         rb.AddForce(dir, ForceMode.Force);
-        rb.AddForce(dirJump, ForceMode.Impulse);
+        if (isGround) rb.AddForce(dirJump, ForceMode.Impulse);
         
     }
 }

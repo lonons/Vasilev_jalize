@@ -5,6 +5,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     [SerializeField] private float speed = 10f;
+    [SerializeField] private int damage = 4;
 
     private void FixedUpdate()
     {
@@ -13,6 +14,10 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.collider.gameObject.TryGetComponent(out Health health))
+        {
+            health.Hit(damage);
+        }
         Destroy(gameObject);
     }
 }
