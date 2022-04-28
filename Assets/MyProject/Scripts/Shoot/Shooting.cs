@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(FindTarget))]
 public class Shooting : MonoBehaviour
 {
     private FindTarget findTarget;
@@ -10,17 +9,32 @@ public class Shooting : MonoBehaviour
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private GameObject bulletPrefab;
 
-    private void Start()
+    private string fire1 = "Fire1";
+    private bool isShoot = true;
+    private bool start = false;
+
+    private void Awake()
     {
-        findTarget = GetComponent<FindTarget>();
         StartCoroutine(Shoot());
+    }
+    private void Update()
+    {
+        if (Input.GetAxis(fire1) == 1)
+        {
+            if (isShoot)
+            {
+                var bullet = Instantiate(bulletPrefab, spawnPoint.position, spawnPoint.rotation);
+                isShoot = false;
+            }
+        }
+        
     }
 
     private IEnumerator Shoot()
     {
         while (true)
         {
-            var bullet = Instantiate(bulletPrefab, spawnPoint.position, spawnPoint.rotation);
+            isShoot = true;
             yield return new WaitForSeconds(1);
         }
         yield return null;
